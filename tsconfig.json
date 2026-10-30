@@ -1,0 +1,19 @@
+{
+  // Visit https://aka.ms/tsconfig to read more about this file
+  "compilerOptions": {
+   "module": "ESNext", 
+     "moduleResolution": "bundler", 
+     "target": "ES2023",
+      "types": ["node"],                              
+    "rootDir": ".",
+    "outDir": "./dist",  
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+     "ignoreDeprecations": "6.0"
+  },
+   "include": ["src/**/*.ts",
+   "prisma.config.ts"],
+  "exclude": ["node_modules", "dist"]
+}
