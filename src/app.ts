@@ -6,7 +6,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 app.get("/", (_req, res) => {
-  res.send("Hello, TypeScript + Express!");
+  res.send(" Welcome to CineTube API");
 });
 
 export default app;
