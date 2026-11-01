@@ -4,7 +4,7 @@ import { movieService } from "./movie.services";
 const createMovie: RequestHandler = async (req, res) => {
   const result = await movieService.createMovie(req.body);
   if (!result.success) {
-    res.status(400).json({ error: result.error });
+    res.status(result.status).json({ error: result.error });
     return;
   }
 
@@ -30,8 +30,37 @@ const getMovieById: RequestHandler = async (req, res) => {
   res.status(200).json({ data: result.data });
 };
 
+const updateMovie: RequestHandler = async (req, res) => {
+  const result = await movieService.updateMovie(req.params.id, req.body);
+  if (!result.success) {
+    res.status(result.status).json({ error: result.error });
+    return;
+  }
+
+  res.status(200).json({
+    success: true,
+    message: "Movie updated successfully",
+    data: result.data,
+  });
+};
+
+const deleteMovie: RequestHandler = async (req, res) => {
+  const result = await movieService.deleteMovie(req.params.id);
+  if (!result.success) {
+    res.status(result.status).json({ error: result.error });
+    return;
+  }
+
+  res.status(200).json({
+    success: true,
+    message: "Movie deleted successfully",
+  });
+};
+
 export const movieController = {
   createMovie,
   getMovies,
   getMovieById,
+  updateMovie,
+  deleteMovie,
 };
