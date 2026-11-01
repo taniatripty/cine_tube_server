@@ -1,3 +1,5 @@
+// use prisma-8
+
 model Movie {
   id                Int      @id @default(autoincrement())
   title             String
@@ -5,9 +7,11 @@ model Movie {
   genre             String
   releaseYear       Int
   director          String
-  
-  streamingPlatform String
-
+  mainActor         String
+  rating            Float
+streamingPlatform String
   createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
+  updatedAt         DateTime @onCreate(now()) @onUpdate(now())
+  isDeleted         Boolean  @default(false)
+  
 }
