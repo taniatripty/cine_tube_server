@@ -4,9 +4,9 @@ import "temporal-polyfill/full/global";
 import postgres from "@prisma/orm-postgres/runtime";
 import { contractFromJson } from "@prisma/orm-postgres/static";
 
-import type { Contract } from "../../../prisma/contract";
+import type { Contract } from "../../../prisma/contract/contract";
 
-import contractJson from "../../../prisma/contract.json" with { type: "json" };
+import contractJson from "../../../prisma/contract/contract.json" with { type: "json" };
 
 const contract = contractFromJson<Contract>(contractJson);
 
