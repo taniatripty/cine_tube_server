@@ -1,0 +1,11 @@
+// use prisma-8
+
+model Person {
+  id        String   @id @onCreate(uuid())
+  name      String   @unique
+  biography String?
+  photo     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @onCreate(now()) @onUpdate(now())
+  isDeleted Boolean  @default(false)
+}

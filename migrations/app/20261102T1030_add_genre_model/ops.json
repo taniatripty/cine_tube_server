@@ -1,0 +1,238 @@
+[
+  {
+    "id": "column.public.Movie.isDeleted",
+    "label": "Add column \"isDeleted\" to \"Movie\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "isDeleted",
+        "table": "Movie"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"isDeleted\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "Movie",
+          "isDeleted"
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "column \"isDeleted\" on \"Movie\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"isDeleted\"",
+        "sql": "ALTER TABLE \"public\".\"Movie\" ADD COLUMN \"isDeleted\" bool DEFAULT false NOT NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"isDeleted\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "Movie",
+          "isDeleted"
+        ],
+        "expectation": {
+          "expects": "present",
+          "object": "column \"isDeleted\" on \"Movie\""
+        }
+      },
+      {
+        "description": "verify column \"isDeleted\" has type \"boolean\"",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_attribute\" AS \"a\" INNER JOIN \"pg_class\" AS \"c\" ON \"c\".\"oid\" = \"a\".\"attrelid\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"relnamespace\" WHERE (\"n\".\"nspname\" = $1 AND \"c\".\"relname\" = $2 AND \"a\".\"attname\" = $3 AND (format_type(\"a\".\"atttypid\", \"a\".\"atttypmod\")) = $4 AND NOT (\"a\".\"attisdropped\"))) AS \"result\"",
+        "params": [
+          "public",
+          "Movie",
+          "isDeleted",
+          "boolean"
+        ]
+      },
+      {
+        "description": "verify column \"isDeleted\" is NOT NULL",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3 AND \"is_nullable\" = $4)) AS \"result\"",
+        "params": [
+          "public",
+          "Movie",
+          "isDeleted",
+          "NO"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.Movie.mainActor",
+    "label": "Add column mainActor to Movie",
+    "summary": "Adds column mainActor to table Movie",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "Movie"
+      }
+    },
+    "operationClass": "additive",
+    "precheck": [
+      {
+        "description": "ensure column \"mainActor\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "Movie",
+          "mainActor"
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "column \"mainActor\" on \"Movie\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"mainActor\"",
+        "sql": "ALTER TABLE \"public\".\"Movie\" ADD COLUMN \"mainActor\" text DEFAULT ('') NOT NULL"
+      },
+      {
+        "description": "drop temporary default from column \"mainActor\"",
+        "sql": "ALTER TABLE \"public\".\"Movie\" ALTER COLUMN \"mainActor\" DROP DEFAULT"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"mainActor\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "Movie",
+          "mainActor"
+        ],
+        "expectation": {
+          "expects": "present",
+          "object": "column \"mainActor\" on \"Movie\""
+        }
+      },
+      {
+        "description": "verify column \"mainActor\" is NOT NULL",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3 AND \"is_nullable\" = $4)) AS \"result\"",
+        "params": [
+          "public",
+          "Movie",
+          "mainActor",
+          "NO"
+        ]
+      },
+      {
+        "description": "verify column \"mainActor\" has no default after temporary default removal",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3 AND \"column_default\" IS NOT NULL)) AS \"result\"",
+        "params": [
+          "public",
+          "Movie",
+          "mainActor"
+        ]
+      },
+      {
+        "description": "verify column \"mainActor\" has type \"text\"",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_attribute\" AS \"a\" INNER JOIN \"pg_class\" AS \"c\" ON \"c\".\"oid\" = \"a\".\"attrelid\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"relnamespace\" WHERE (\"n\".\"nspname\" = $1 AND \"c\".\"relname\" = $2 AND \"a\".\"attname\" = $3 AND (format_type(\"a\".\"atttypid\", \"a\".\"atttypmod\")) = $4 AND NOT (\"a\".\"attisdropped\"))) AS \"result\"",
+        "params": [
+          "public",
+          "Movie",
+          "mainActor",
+          "text"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.Movie.rating",
+    "label": "Add column rating to Movie",
+    "summary": "Adds column rating to table Movie",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "Movie"
+      }
+    },
+    "operationClass": "additive",
+    "precheck": [
+      {
+        "description": "ensure column \"rating\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "Movie",
+          "rating"
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "column \"rating\" on \"Movie\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"rating\"",
+        "sql": "ALTER TABLE \"public\".\"Movie\" ADD COLUMN \"rating\" float8 DEFAULT (0) NOT NULL"
+      },
+      {
+        "description": "drop temporary default from column \"rating\"",
+        "sql": "ALTER TABLE \"public\".\"Movie\" ALTER COLUMN \"rating\" DROP DEFAULT"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"rating\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "Movie",
+          "rating"
+        ],
+        "expectation": {
+          "expects": "present",
+          "object": "column \"rating\" on \"Movie\""
+        }
+      },
+      {
+        "description": "verify column \"rating\" is NOT NULL",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3 AND \"is_nullable\" = $4)) AS \"result\"",
+        "params": [
+          "public",
+          "Movie",
+          "rating",
+          "NO"
+        ]
+      },
+      {
+        "description": "verify column \"rating\" has no default after temporary default removal",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3 AND \"column_default\" IS NOT NULL)) AS \"result\"",
+        "params": [
+          "public",
+          "Movie",
+          "rating"
+        ]
+      },
+      {
+        "description": "verify column \"rating\" has type \"double precision\"",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_attribute\" AS \"a\" INNER JOIN \"pg_class\" AS \"c\" ON \"c\".\"oid\" = \"a\".\"attrelid\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"relnamespace\" WHERE (\"n\".\"nspname\" = $1 AND \"c\".\"relname\" = $2 AND \"a\".\"attname\" = $3 AND (format_type(\"a\".\"atttypid\", \"a\".\"atttypmod\")) = $4 AND NOT (\"a\".\"attisdropped\"))) AS \"result\"",
+        "params": [
+          "public",
+          "Movie",
+          "rating",
+          "double precision"
+        ]
+      }
+    ]
+  }
+]
